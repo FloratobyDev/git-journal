@@ -57,8 +57,13 @@ export function load() {
 		}
 	}
 
+	async function handlePush({ octokit, payload }) {
+		console.log('push response', payload, octokit);
+	}
+
 	// This sets up a webhook event listener. When your app receives a webhook event from GitHub with a `X-GitHub-Event` header value of `pull_request` and an `action` payload value of `opened`, it calls the `handlePullRequestOpened` event handler that is defined above.
-	app.webhooks.on('pull_request.opened', handlePullRequestOpened);
+	app.webhooks.on('pull_request.reopened', handlePullRequestOpened);
+	app.webhooks.on('push', handlePush);
 
 	// This logs any errors that occur.
 	app.webhooks.onError((error) => {
@@ -72,9 +77,9 @@ export function load() {
 	// This determines where your server will listen.
 	//
 	// For local development, your server will listen to port 3000 on `localhost`. When you deploy your app, you will change these values. For more information, see "[Deploy your app](#deploy-your-app)."
-	const port = 3001;
+	const port = 3002;
 	const host = 'localhost';
-	const path = '/';
+	const path = '/api';
 	const localWebhookUrl = `http://${host}:${port}${path}`;
 
 	// This sets up a middleware function to handle incoming webhook events.
